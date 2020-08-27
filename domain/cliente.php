@@ -1,10 +1,13 @@
 <?php
 
-class Usuario{
-    public $idusuario;
-    public $nomeusuario;
-    public $senha;
-    public $foto;
+class Cliente{
+public $idcliente;
+public $nomecliente;
+public $cpf;
+public $sexo;
+public $idcontato;
+public $idendereco;
+public $idusuario;
 
     public function __construct($db){
         $this->conexao = $db;
@@ -14,7 +17,7 @@ class Usuario{
     Função para listar todos os usuários cadastrados no banco de dados
     */
     public function listar(){
-        $query = "select * from usuario";
+        $query = "select * from cliente";
         /*
         Será criada a variável stmt(Statement - Sentença)
         para guardar a preparação da consulta select que será executada
@@ -30,19 +33,22 @@ class Usuario{
     }
 
     public function cadastro(){
-        $query = "insert into usuario set nomeusuario=:n, senha=:s, foto=:f";
+        $query = "insert into cliente set nomecliente=:n,cpf=:c,sexo=:s,idcontato=:ic,idendereco=:ie,idusuario=:iu";
 
         $stmt = $this->conexao->prepare($query);
-
-        //Encriptografar a senha com o uso de md5
-        $this->senha = md5($this->senha);
 
         /*Vamos vincular os dados que veem do app ou navegador com os campos de
         banco de dados
         */
-        $stmt->bindParam(":n",$this->nomeusuario);
-        $stmt->bindParam(":s",$this->senha);
-        $stmt->bindParam(":f",$this->foto);
+
+$stmt->bindParam(":n",$this->nomecliente);
+$stmt->bindParam(":c",$this->cpf);
+$stmt->bindParam(":s",$this->sexo);
+$stmt->bindParam(":ic",$this->idcontato);
+$stmt->bindParam(":ie",$this->idendereco);
+$stmt->bindParam(":iu",$this->idusuario);
+
+
 
         if($stmt->execute()){
             return true;
@@ -53,19 +59,24 @@ class Usuario{
 
     }
 
-    public function alterarSenha(){
-        $query = "update usuario set senha=:s where idusuario=:id";
+    public function atualizarcliente(){
+        $query = "update cliente set nomecliente=:n,cpf=:c,sexo=:s,idcontato=:ic,idendereco=:ie,idusuario=:iu where idcliente=:idcli";
 
         $stmt = $this->conexao->prepare($query);
-
-        //Encriptografar a senha com o uso de md5
-        $this->senha = md5($this->senha);
 
         /*Vamos vincular os dados que veem do app ou navegador com os campos de
         banco de dados
         */
-        $stmt->bindParam(":s",$this->senha);
-        $stmt->bindParam(":id",$this->idusuario);
+
+$stmt->bindParam(":n",$this->nomecliente);
+$stmt->bindParam(":c",$this->cpf);
+$stmt->bindParam(":s",$this->sexo);
+$stmt->bindParam(":ic",$this->idcontato);
+$stmt->bindParam(":ie",$this->idendereco);
+$stmt->bindParam(":iu",$this->idusuario);
+$stmt->bindParam(":idcli",$this->idcliente);
+
+
 
         if($stmt->execute()){
             return true;
@@ -75,34 +86,16 @@ class Usuario{
         }
     }
 
-    public function alterarFoto(){
-        $query = "update usuario set foto=:f where idusuario=:id";
+
+    public function apagarcliente(){
+        $query = "delete from cliente where idcliente=:id";
 
         $stmt = $this->conexao->prepare($query);
 
         /*Vamos vincular os dados que veem do app ou navegador com os campos de
         banco de dados
         */
-        $stmt->bindParam(":f",$this->foto);
-        $stmt->bindParam(":id",$this->idusuario);
-
-        if($stmt->execute()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    public function apagarUsuario(){
-        $query = "delete from usuario where idusuario=:id";
-
-        $stmt = $this->conexao->prepare($query);
-
-        /*Vamos vincular os dados que veem do app ou navegador com os campos de
-        banco de dados
-        */
-        $stmt->bindParam(":id",$this->idusuario);
+        $stmt->bindParam(":id",$this->idcliente);
       
 
         if($stmt->execute()){

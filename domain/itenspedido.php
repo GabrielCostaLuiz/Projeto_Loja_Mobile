@@ -1,9 +1,10 @@
 <?php
 
-class Contato{
-    public $idcontato;
-    public $telefone;
-    public $email;
+class ItensPedido{
+    public $iditenspedido;
+    public $idpedido;
+    public $idproduto;
+    public $quantidade;
 
     public function __construct($db){
         $this->conexao = $db;
@@ -13,7 +14,7 @@ class Contato{
     Função para listar todos os usuários cadastrados no banco de dados
     */
     public function listar(){
-        $query = "select * from contato";
+        $query = "select * from itenspedido";
         /*
         Será criada a variável stmt(Statement - Sentença)
         para guardar a preparação da consulta select que será executada
@@ -29,15 +30,16 @@ class Contato{
     }
 
     public function cadastro(){
-        $query = "insert into contato set telefone=:t, email=:e";
+        $query = "insert into itenspedido set idpedido=:ip, idproduto=:ipro, quantidade=:q";
 
         $stmt = $this->conexao->prepare($query);
 
         /*Vamos vincular os dados que veem do app ou navegador com os campos de
         banco de dados
         */
-        $stmt->bindParam(":t",$this->telefone);
-        $stmt->bindParam(":e",$this->email);
+        $stmt->bindParam(":ip",$this->idpedido);
+        $stmt->bindParam(":ipro",$this->idproduto);
+        $stmt->bindParam(":q",$this->quantidade);
 
         if($stmt->execute()){
             return true;
@@ -48,37 +50,18 @@ class Contato{
 
     }
 
-    public function atualizarcontato(){
-        $query = "update contato set telefone=:t, email=:e where idcontato=:id";
+    public function atualizaritenspedidos(){
+        $query = "update itenspedido set idpedido=:ip, idproduto=:ipro, quantidade=:q where iditenspedido=:itens";
 
         $stmt = $this->conexao->prepare($query);
 
         /*Vamos vincular os dados que veem do app ou navegador com os campos de
         banco de dados
         */
-        $stmt->bindParam(":t",$this->telefone);
-        $stmt->bindParam(":e",$this->email);
-        $stmt->bindParam(":id",$this->idcontato);
-
-        if($stmt->execute()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    public function apagarcontato(){
-        $query = "delete from contato where idcontato=:id";
-
-        $stmt = $this->conexao->prepare($query);
-
-        /*Vamos vincular os dados que veem do app ou navegador com os campos de
-        banco de dados
-        */
-        $stmt->bindParam(":id",$this->idcontato);
-      
-
+        $stmt->bindParam(":ip",$this->idpedido);
+        $stmt->bindParam(":ipro",$this->idproduto);
+        $stmt->bindParam(":q",$this->quantidade);
+        $stmt->bindParam(":itens",$this->iditenspedido);
         if($stmt->execute()){
             return true;
         }

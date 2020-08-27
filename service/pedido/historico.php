@@ -18,6 +18,9 @@ Notatio)
 */
 header("Content-Type: application/json;charset=utf-8");
 
+
+header("Access-Control-Allow-Methods:POST");
+
 /*
 Abaixo estamos incluindo o arquivo database.php que possui a 
 classe Database com a conexão com o banco deados
@@ -26,10 +29,10 @@ classe Database com a conexão com o banco deados
 include_once "../../config/database.php";
 
 /*
-O arquivo produto.php foi será incluido para que a classe Produto 
+O arquivo usuario.php foi será incluido para que a classe Usuario 
 seja usada. Vale lembrar que esta classe possui o CRUD
 */
-include_once "../../domain/produto.php";
+include_once "../../domain/historicopedido.php";
 
 /*
 Criamos um objeto chamado $database. É uma instância da classe Database 
@@ -49,13 +52,18 @@ esta função realiza a conexao com o banco de dados
 $db = $database->getConnection();
 
 /*
-Vamos fazer uma instância da classe produto para ter acesso a todo
+Vamos fazer uma instância da classe usuário para ter acesso a todo
 o seu conteúdo.
 */
 
-$produto = new Produto($db);
+$hp = new HistoricoPedido($db);
 
-$rs = $produto->listar();
+$data = json_decode(file_get_contents("php://input"));
+
+$hp->idcliente=$data->idcliente;
+
+
+$rs = $hp->listar();
 
 /*
 Vamos construir uma estrutura exibir os dados do banco no formato de 
@@ -65,39 +73,44 @@ criar uma array para exibir todos os dados corretamente
 */
 
 if($rs->rowCount()>0){
-    $produto_arr["saida"] = array();
+    $usuario_arr["saida"] = array();
 /*
-A estrutra while(equanto) realiza a busca de todos os produtos cadastrados
+A estrutra while(equanto) realiza a busca de todos os usuários cadastrados
 até chegar ao final da tabela e tras os dados para fetch array organizar 
 em formato de array
-Assim será mais fácil de adcionar no array de produto para apresentar 
+Assim será mais fácil de adcionar no array de usuarios para apresentar 
 ao final
 */
     while($linha = $rs->fetch(PDO::FETCH_ASSOC)){
 
         /*
         o comando extract é capaz de separar de forma mais simples os 
-        campos da tabela produtos
+        campos da tabela usuarios
         */
         extract($linha);
         $array_item = array(
-            "idproduto"=>$idproduto,
-            "nomeproduto"=>$nomeproduto,
-            "descricao"=>$descricao,
-            "preco"=>$preco,
-            "idfoto"=>$idfoto
+            "idcliente"=> $idcliente,
+    "idpedido"=> $idpedido,
+    "datapedido"=> $datapedido,
+    "nomeproduto"=> $nomeproduto,
+    "preco"=> $preco,
+    "quantidade"=> $quantidade,
+    "tipo"=> $tipo,
+    "valor"=> $valor,
+    "parcelas"=> $parcelas,
+    "valorparcela"=> $valorparcela
         );
 
-        array_push($produto_arr["saida"],$array_item);
+        array_push($usuario_arr["saida"],$array_item);
 
     }
 
     header("HTTP/1.0 200");
-    echo json_encode($produto_arr);
+    echo json_encode($usuario_arr);
 }
 else{
     header("HTTP/1.0 400");
-    echo json_encode(array("mensagem"=>"Não há produtos cadastrados"));
+    echo json_encode(array("mensagem"=>"Não há pedidos realizados"));
 }
 ?>
 

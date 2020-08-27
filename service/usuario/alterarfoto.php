@@ -23,7 +23,7 @@ $usuario = new Usuario($db);
 
 /*
 O cliente irá enviar os dado no formato Json. Porém
- nós precisamos dos dados no formato php para cadastra em
+ nós precisamos dos dados no formato php para cadstra em
  banco de dados. 
  Para realizar essa conversão iremos usar o comando json_decode
  Assi o cliente envia os dados e estes serão convertidos para php

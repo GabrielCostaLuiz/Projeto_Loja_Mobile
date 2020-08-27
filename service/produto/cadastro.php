@@ -7,18 +7,18 @@ header("Access-Control-Allow-Origin:*");
 header("Content-Type:application/json;charset=utf-8");
 
 /*Para efetuar o cadastro de dados no banco é preciso
-informar a api que essa ação  irá ocorrer
+informar a api que essa ação irá ocorrer
 */
 header("Access-Control-Allow-Methods:POST");
 
 include_once "../../config/database.php";
 
-include_once "../../domain/usuario.php";
+include_once "../../domain/produto.php";
 
 $database = new Database();
 $db = $database->getConnection();
 
-$usuario = new Usuario($db);
+$produto = new Produto($db);
 
 /*
 O cliente irá enviar os dado no formato Json. Porém
@@ -30,15 +30,16 @@ O cliente irá enviar os dado no formato Json. Porém
 $data = json_decode(file_get_contents("php://input"));
 
 #Verificar se os dados vindos do usuário estão preenchidos
-if(!empty($data->nomeusuario) && !empty($data->senha) && !empty($data->foto)){
+if(!empty($data->nomeproduto) && !empty($data->descricao) && !empty($data->preco) && !empty($data->idfoto)){
 
-    $usuario->nomeusuario = $data->nomeusuario;
-    $usuario->senha = $data->senha;
-    $usuario->foto=$data->foto;
+    $produto->nomeproduto = $data->nomeproduto;
+    $produto->descricao = $data->descricao;
+    $produto->preco=$data->preco;
+    $produto->idfoto=$data->idfoto;
 
-    if($usuario->cadastro()){
+    if($produto->cadastro()){
         header("HTTP/1.0 201");
-        echo json_encode(array("mensagem"=>"Usuário cadastrado com sucesso!"));
+        echo json_encode(array("mensagem"=>"Produto cadastrado com sucesso!"));
     }
     else{
         header("HTTP/1.0 400");

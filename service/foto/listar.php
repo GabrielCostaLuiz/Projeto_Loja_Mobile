@@ -35,6 +35,7 @@ include_once "../../domain/foto.php";
 Criamos um objeto chamado $database. É uma instância da classe Database 
 que está na pasta config e isso nos dará acesso a todo o seu conteudo
 publico
+
 */
 
 
@@ -99,3 +100,4 @@ else{
     echo json_encode(array("mensagem"=>"Não há fotos cadastradas"));
 }
 ?>
+
